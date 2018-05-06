@@ -123,7 +123,7 @@ cmake \
     -DBUILD_opencv_structured_light=OFF \
     -DBUILD_opencv_surface_matching=OFF \
     -DBUILD_opencv_text=ON \
-    -DBUILD_opencv_tracking=OFF \
+    -DBUILD_opencv_tracking=ON \
     -DBUILD_opencv_xfeatures2d=ON \
     -DBUILD_opencv_ximgproc=ON \
     -DBUILD_opencv_xobjdetect=ON \
@@ -137,7 +137,7 @@ make install -C "${OPENCV_BUILD_DIR}"
 #                            Build mexopencv                           #
 ########################################################################
 echo "Building mexopencv..."
-export PKG_CONFIG_PATH=${OPENCV_INSTALL_DIR}/lib/pkgconfig:${PKG_CONFIG_PATH}
+export PKG_CONFIG_PATH=${OPENCV_INSTALL_DIR}/lib64/pkgconfig:${PKG_CONFIG_PATH}
 
 make all contrib -j4 MATLABDIR="${MATLABDIR}" -C "${ROOT_DIR}/external/mexopencv"
 

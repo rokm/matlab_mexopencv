@@ -111,7 +111,7 @@ cmake ^
     -DBUILD_opencv_structured_light=OFF ^
     -DBUILD_opencv_surface_matching=OFF ^
     -DBUILD_opencv_text=ON ^
-    -DBUILD_opencv_tracking=OFF ^
+    -DBUILD_opencv_tracking=ON ^
     -DBUILD_opencv_xfeatures2d=ON ^
     -DBUILD_opencv_ximgproc=ON ^
     -DBUILD_opencv_xobjdetect=ON ^
