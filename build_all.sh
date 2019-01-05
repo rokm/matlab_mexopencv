@@ -135,7 +135,7 @@ make install -C "${OPENCV_BUILD_DIR}"
 echo "Building mexopencv..."
 export PKG_CONFIG_PATH=${OPENCV_INSTALL_DIR}/lib64/pkgconfig:${PKG_CONFIG_PATH}
 
-make all contrib -j4 MATLABDIR="${MATLABDIR}" -C "${ROOT_DIR}/external/mexopencv"
+make all contrib -j4 MATLABDIR="${MATLABDIR}" LDFLAGS="LDFLAGS='-Wl,--as-needed $LDFLAGS'" -C "${ROOT_DIR}/external/mexopencv"
 
 
 # End of script
