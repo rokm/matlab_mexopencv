@@ -118,6 +118,9 @@ to start Matlab, run the following script from your working directory:
 It will set up LD_LIBRARY_PATH and run the ```startup.m``` Matlab script
 to properly set up paths to external dependencies.
 
+Note that the script can be called from an arbitrary working directory,
+i.e., it is not restricted to the code checkout directory.
+
 
 ### Windows
 
@@ -146,3 +149,49 @@ finishing the build process.
 On Windows (in contrast to Linux; see above), Matlab can be started
 normally - but make sure that the ```startup.m``` is executed before
 using the functions and objects from this project.
+
+
+## Compatibility issues on Linux
+
+Matlab bundles a lot of dynamic libraries in its installation directories,
+which unfortunately tends to cause compatibility issues with MEX files
+that are compiled against host libraries.
+
+## libstdc++
+
+A commonly-encountered issue is related to bundled libstdc++, in cases
+when the host system ships with newer version of glibc. In this case,
+the libraries we build ourselves (e.g., our build of OpenCV) is linked
+against host libstdc++, which contains symbols of higher version than
+the ones that are later found in Matlab's libstdc++.
+
+This is usually remedied by removing Matlab's libstdc++, which will
+cause it to use the host's version of the library. In practice, it is
+best to simply move the problematic libraries to a backup folder, e.g.:
+```Shell
+cd /usr/local/MATLAB/R2016b
+cd sys/os/glnxa64
+sudo mkdir bak
+sudo mv libgcc_s.so.1 libquadmath.so.0 libquadmath.so.0.0.0 libstdc++.so.6 libstdc++.so.6.0.20 bak/
+```
+
+## Other Matlab-provided libraries
+
+Another, larger set of Matlab-bundled libraries can be found under bin
+directory in Matlab's installation directory.
+
+Of those bundled libraries, I tend to remove libfreetype (so that system
+version is used instead) to avoid warnings about a missing symbol information.
+
+On Fedora 29, I also found that unless Matlab's version of TBB is removed,
+OpenCV compiled against system's version of TBB crashes Matlab when a
+mexopencv MEX file is loaded. (Alternative is to modify the build_all.sh
+to include -DWITH_TBB=OFF flag when building OpenCV).
+
+```Shell
+cd /usr/local/MATLAB/R2016b
+cd bin/glnxa64
+sudo mkdir bak
+sudo mv libfreetype* bak/
+sudo mv libtbb* bak/
+```
