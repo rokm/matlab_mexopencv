@@ -13,10 +13,6 @@ set -e
 ########################################################################
 #                             Build OpenCV                             #
 ########################################################################
-# NOTE: for the time being, we build and use a private branch of OpenCV
-# with various improvements for integration of descriptors into our
-# evaluation framework.
-#
 # Fedora dependencies:
 #  libtiff-devel libjpeg-devel libwebp-devel jasper-devel OpenEXR-devel
 #  ffmpeg-devel

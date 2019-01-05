@@ -15,9 +15,6 @@ set "ROOT_DIR=%~dp0"
 :: ########################################################################
 :: #                             Build OpenCV                             #
 :: ########################################################################
-:: NOTE: for the time being, we build and use a private branch of OpenCV
-:: with various improvements for integration of descriptors into our
-:: evaluation framework.
 set "OPENCV_SOURCE_DIR=%ROOT_DIR%\external\opencv"
 set "OPENCV_CONTRIB_SOURCE_DIR=%ROOT_DIR%\external\opencv_contrib"
 set "OPENCV_BUILD_DIR=%OPENCV_SOURCE_DIR%\build"
