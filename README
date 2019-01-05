@@ -1,0 +1,148 @@
+# MATLAB & mexopencv integration bundle #
+
+(C) 2017-2019, Rok Mandeljc
+
+
+## Summary
+
+This project aims to provide an easy-to-use mexopencv bundle for rapid
+OpenCV prototyping with MATLAB. It provides self-contained versions
+of OpenCV and mexopencv, along with build scripts and startup scripts
+for Linux and Windows.
+
+The main idea is that instead of building mexopencv manually and
+having to worry about the compatibility with system's OpenCV version,
+a private version of compatible OpenCV and corresponding mexopencv
+is built using the provided build script. In addition, provided startup
+scripts take care of setting correct library paths, avoiding the
+issues with missing imports.
+
+
+## Prerequisites
+
+The bundle was primarily developed and tested on 64-bit Linux (Fedora 29)
+with Matlab R2016b, but has also been tested on 64-bit Windows 10 with
+Visual Studio 2015 and Matlab R2016a.
+
+
+### Linux
+
+A recent 64-bit Linux distribution with basic compilation toolchain
+(git, gcc, CMake, make) is required.
+
+In addition, dependencies for building the git checkout of OpenCV are
+required. On Fedora, the basic set of development libraries I use can
+be installed via:
+```Shell
+sudo dnf install \
+    git \
+    cmake \
+    gcc-c++ \
+    zlib-devel \
+    libwebp-devel \
+    libjpeg-devel \
+    libpng-devel \
+    libtiff-devel \
+    jasper-devel \
+    OpenEXR-devel \
+    ffmpeg-devel \
+    gstreamer-devel \
+    gstreamer-plugins-base-devel \
+    libv4l-devel \
+    tbb-devel \
+    eigen3-devel \
+    openblas-devel
+```
+
+### Windows
+
+A recent version of  Matlab and working MEX compiler is required.
+
+Make sure that Matlab executable is in PATH; i.e., that you
+can start it by running ```matlab``` from Windows command prompt (cmd).
+
+In addition, you will need git and CMake. Make sure that the path to
+CMake executable is in PATH.
+
+Ensure that MEX compiler is properly set up in Matlab, and that it
+points to the correct Visual Studio installation. You can check this
+by running the following inside Matlab:
+```Matlab
+mex -setup C++
+```
+and following its instructions for choosing the correct compiler.
+
+
+## Installation
+
+Checkout the repository to a target location:
+```Shell
+git clone https://github.com/rokm/matlab_mexopencv matlab_mexopencv
+cd matlab_mexopencv
+git submodule update --init --recursive
+cd ..
+```
+The above command should also pull in all external dependencies
+(opencv, opencv-contrib, mexopencv) as git submodules from their
+corresponding repositories.
+
+### Linux
+
+To simplify the build process, use the provided ```build_all.sh``` script.
+
+First, export the path to your matlab installation:
+```Shell
+export MATLABDIR=/usr/local/MATLAB/R2016b
+```
+
+Then, run the build script from your working directory:
+```Shell
+./matlab_mexopencv/build_all.sh
+```
+
+The shell script will attempt to:
+- build OpenCV and install it inside the pre-determined sub-directory
+  inside the target (checkout) directory
+- build mexopencv (using make)
+
+If no errors occurred, the script will print a message about successfully
+finishing the build process.
+
+On Linux, the OpenCV shared libraries (required by mexopencv) need to be
+in your LD_LIBRARY_PATH before Matlab is started. For convenience, a
+startup script is provided which takes care of that for you. Therefore,
+to start Matlab, run the following script from your working directory:
+```Shell
+./matlab_mexopencv/start_matlab.sh
+```
+It will set up LD_LIBRARY_PATH and run the ```startup.m``` Matlab script
+to properly set up paths to external dependencies.
+
+
+### Windows
+
+Similarly to Linux, a build batch script is available. Open the Windows
+Prompt (cmd), and move inside the working directory.
+
+Make sure that Matlab and CMake are in the PATH.
+
+Then, set the Visual Studio version and architecture (required for CMake),
+and run the build script from the working directory:
+```Batchfile
+set "DEFAULT_CMAKE_GENERATOR=Visual Studio 14"
+set "DEFAULT_CMAKE_ARCH=x64"
+
+matlab_mexopencv\build_all.bat
+```
+
+The script will attempt to:
+- build OpenCV and install it inside the pre-determined sub-directory
+  inside the code directory
+- run Matlab and build mexopencv
+
+If no errors occurred, the script will print a message about successfully
+finishing the build process.
+
+On Windows (in contrast to Linux; see above), Matlab can be started
+normally - but make sure that the ```startup.m``` is executed before
+using the functions and objects from this project.
