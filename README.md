@@ -6,23 +6,25 @@
 ## Summary
 
 This project aims to provide an easy-to-use mexopencv bundle for rapid
-OpenCV prototyping with MATLAB. It provides self-contained versions
-of OpenCV and mexopencv, along with build scripts and startup scripts
-for Linux and Windows.
+OpenCV prototyping with MATLAB. It provides self-contained (source)
+versions of OpenCV and mexopencv, along with build scripts and startup
+scripts for Linux and Windows.
 
-The main idea is that instead of building mexopencv manually and
-having to worry about the compatibility with system's OpenCV version,
+The main idea is that instead of building mexopencv against system's
+OpenCV and having to worry about its version and feature compatibility,
 a private version of compatible OpenCV and corresponding mexopencv
-is built using the provided build script. In addition, provided startup
-scripts take care of setting correct library paths, avoiding the
-issues with missing imports.
+is built using the provided build script. In addition, the provided
+startup scripts take care of setting correct library paths, avoiding the
+issues with missing or conflicting library imports.
 
 
 ## Prerequisites
 
 The bundle was primarily developed and tested on 64-bit Linux (Fedora 29)
-with Matlab R2016b, but has also been tested on 64-bit Windows 10 with
-Visual Studio 2015 and Matlab R2016a.
+with Matlab R2016b, but has also been tested on 64-bit Windows 8.1 with
+Visual Studio 2015 and Matlab R2016a, and 64-bit Windows 10 with
+Visual Studio 2017 and Matlab R2017b. Matlab R2018a and later are
+currently not supported on Windows due to bug in mexopencv's build scripts!
 
 
 ### Linux
@@ -56,13 +58,10 @@ sudo dnf install \
 
 ### Windows
 
-A recent version of  Matlab and working MEX compiler is required.
+A recent version of Matlab and working MEX compiler is required.
 
 Make sure that Matlab executable is in PATH; i.e., that you
 can start it by running ```matlab``` from Windows command prompt (cmd).
-
-In addition, you will need git and CMake. Make sure that the path to
-CMake executable is in PATH.
 
 Ensure that MEX compiler is properly set up in Matlab, and that it
 points to the correct Visual Studio installation. You can check this
@@ -70,7 +69,10 @@ by running the following inside Matlab:
 ```Matlab
 mex -setup C++
 ```
-and following its instructions for choosing the correct compiler.
+and follow its instructions for choosing the correct compiler.
+
+In addition, you will need git and CMake. Make sure that the path to
+CMake executable is in PATH.
 
 
 ## Installation
@@ -82,7 +84,7 @@ cd matlab_mexopencv
 git submodule update --init --recursive
 cd ..
 ```
-The above command should also pull in all external dependencies
+The above commands should also pull in all external dependencies
 (opencv, opencv-contrib, mexopencv) as git submodules from their
 corresponding repositories.
 
@@ -90,12 +92,12 @@ corresponding repositories.
 
 To simplify the build process, use the provided ```build_all.sh``` script.
 
-First, export the path to your matlab installation:
+First, export the path to your Matlab installation:
 ```Shell
 export MATLABDIR=/usr/local/MATLAB/R2016b
 ```
 
-Then, run the build script from your working directory:
+Then, run the build script:
 ```Shell
 ./matlab_mexopencv/build_all.sh
 ```
@@ -111,7 +113,7 @@ finishing the build process.
 On Linux, the OpenCV shared libraries (required by mexopencv) need to be
 in your LD_LIBRARY_PATH before Matlab is started. For convenience, a
 startup script is provided which takes care of that for you. Therefore,
-to start Matlab, run the following script from your working directory:
+to start Matlab, run the following startup script:
 ```Shell
 ./matlab_mexopencv/start_matlab.sh
 ```
@@ -120,6 +122,10 @@ to properly set up paths to external dependencies.
 
 Note that the script can be called from an arbitrary working directory,
 i.e., it is not restricted to the code checkout directory.
+
+The startup script assumes that the path to Matlab installation is
+stored in MATLABDIR environment variable; one way to ensure this is
+to set it up in your .bash_profile.
 
 
 ### Windows
@@ -130,7 +136,7 @@ Prompt (cmd), and move inside the working directory.
 Make sure that Matlab and CMake are in the PATH.
 
 Then, set the Visual Studio version and architecture (required for CMake),
-and run the build script from the working directory:
+and run the build script:
 ```Batchfile
 set "DEFAULT_CMAKE_GENERATOR=Visual Studio 14"
 set "DEFAULT_CMAKE_ARCH=x64"
